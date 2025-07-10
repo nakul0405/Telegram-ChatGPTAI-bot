@@ -1,10 +1,3 @@
-Bhai, tera repo check kiya: [`Telegram-ChatGPTAI-bot`](https://github.com/nakul0405/Telegram-ChatGPTAI-bot). Accha kaam hai — OpenAI API + Telegram bot ka combo solid hai. Ab neeche tujhe mil raha hai ek **tailored, full-blown README.md** jo GitHub pe daal ke confidently bol sakta hai:
-
-> **"Haan bhai, ye maine banaya hai, aur poora samajh ke banaya hai."**
-
----
-
-````markdown
 # 🤖 Telegram ChatGPT AI Bot
 
 A fully self-built Telegram bot that connects directly to **OpenAI’s GPT API** and gives you ChatGPT-like responses right inside Telegram. No shortcuts, no forks — pura ka pura code maine khud likha hai.  
@@ -148,5 +141,3 @@ Replace the placeholders like:
 - Your actual `TELEGRAM_BOT_TOKEN` and `OPENAI_API_KEY` → use `.env` securely
 - Add any features *you* specifically added/customized — personalize it more if you like
 
-Agar tu chahe toh main tera repo ke code ko aur modular/clean bhi suggest kar sakta hoon. Bss bol.
-```
