@@ -129,7 +129,8 @@ Repo khud banaya hai, but **improvement har cheez me hoti hai**. Suggestions, im
 ---
 
 > Made with ❤️, patience, and thoda sa jugaad
-> – [@Nakulrathod0405](https://t.me/Nakulrathod0405) 
+> – [@Nakulrathod0405](https://t.me/nakulrathod0405)
+
 ```
 
 ---
