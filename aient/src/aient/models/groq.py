@@ -197,7 +197,7 @@ class groq(BaseLLM):
                 if response.status_code != 200:
                     await response.aread()
                     print(response.text)
-                    raise BaseException(f"{response.status_code} {response.reason} {response.text}")
+                    raise BaseException(f"{response.status_code} {response.text}")
                 async for line in response.aiter_lines():
                     if not line:
                         continue
