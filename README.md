@@ -13,7 +13,7 @@ Yeh project ek simple idea se start hua: "Apna khud ka AI assistant ho Telegram 
 - ⚙️ Minimal dependencies, simple architecture
 - 🔒 API keys handled via `.env` for security
 
----
+--- 
 
 ## ⚙️ Tech Stack
 
