@@ -1,4 +1,30 @@
 import os
+import logging
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters
+
+from handlers import start, unknown  # your own handlers
+
+logging.basicConfig(level=logging.INFO)
+
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+PORT = int(os.getenv("PORT", 8000))
+WEB_HOOK = os.getenv("WEB_HOOK")
+time_out = 30  # safe default
+
+application = ApplicationBuilder().token(BOT_TOKEN).build()
+application.add_handler(CommandHandler("start", start))
+application.add_handler(MessageHandler(filters.COMMAND, unknown))
+
+print("✔️ Bot loaded. Launching...")
+
+if WEB_HOOK:
+    print("Using Webhook")
+    application.run_webhook("0.0.0.0", PORT, webhook_url=WEB_HOOK)
+else:
+    print("Using Polling mode")
+    application.run_polling(timeout=time_out)
+
+import os
 import re
 import sys
 sys.dont_write_bytecode = True
