@@ -604,6 +604,15 @@ async def button_press(update, context):
                 parse_mode='MarkdownV2'
             )
 
+                elif data == "DEV_INFO":
+            await callback_query.edit_message_text(
+                text="👨‍💻 *Developer:* Nakul Rathod\n🔗 Telegram: [@Nakulrathod0405](https://t.me/Nakulrathod0405)",
+                parse_mode="Markdown",
+                reply_markup=InlineKeyboardMarkup([
+                    [InlineKeyboardButton("⬅️ Back", callback_data="BACK")]
+                ])
+            )
+
         elif data.startswith("BACK"):
             message = await callback_query.edit_message_text(
                 text=escape(info_message, italic=False),
