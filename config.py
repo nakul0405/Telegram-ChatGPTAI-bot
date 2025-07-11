@@ -403,7 +403,6 @@ def update_info_message(user_id = None):
         f"**🚰 Tokens usage:** `{get_robot(user_id)[0].tokens_usage[str(user_id)]}`\n\n" if get_robot(user_id)[0] else "",
         f"**🃏 NICK:** `{NICK}`\n\n" if NICK else "",
         f"**📖 Version:** `{check_for_updates()}`\n\n",
-        f"**🧑‍⚕️ Developer:** [Nakul Rathod](https://t.me/Nakulrathod0405)\n\n",
     ])
 
 def reset_ENGINE(chat_id, message=None):
