@@ -806,6 +806,9 @@ def update_first_buttons_message(chatid=None):
             InlineKeyboardButton(strings['button_language'][lang], callback_data="LANGUAGE"),
             InlineKeyboardButton(strings['button_plugins'][lang], callback_data="PLUGINS"),
         ],
+        [
+            InlineKeyboardButton("👨‍💻 Developer", url="https://t.me/Nakulrathod0405"),  # 👈 Ye line add kar di
+        ]
     ]
     return first_buttons
 
