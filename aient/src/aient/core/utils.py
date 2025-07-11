@@ -65,9 +65,11 @@ def get_engine(provider, endpoint=None, original_model=""):
     # print("parsed_url", parsed_url)
     engine = None
     stream = None
-    if parsed_url.path.endswith("/v1beta") or \
-    parsed_url.path.endswith("/v1") or \
-    (parsed_url.netloc == 'generativelanguage.googleapis.com' and "openai/chat/completions" not in parsed_url.path):
+    path = parsed_url.path.decode() if isinstance(parsed_url.path, bytes) else parsed_url.path
+
+if path.endswith("/v1beta") or \
+    path.endswith("/v1") or \
+    (parsed_url.netloc == 'generativelanguage.googleapis.com' and "openai/chat/completions" not in path):
         engine = "gemini"
     elif parsed_url.netloc.rstrip('/').endswith('aiplatform.googleapis.com') or \
         (parsed_url.netloc.rstrip('/').endswith('gateway.ai.cloudflare.com') and "google-vertex-ai" in parsed_url.path) or \
