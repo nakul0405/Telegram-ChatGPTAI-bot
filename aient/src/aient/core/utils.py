@@ -61,22 +61,21 @@ class BaseAPI:
             self.embeddings = api_url
 
 def get_engine(provider, endpoint=None, original_model=""):
-    base_url = provider['base_url']
-    if isinstance(base_url, bytes):
-        base_url = base_url.decode("utf-8")  # ✅ Fix here
-
-    parsed_url = urlparse(base_url)
-    # print("parsed_url", parsed_url)
-
+    parsed_url = urlparse(provider['base_url'])
     engine = None
     stream = None
-    if parsed_url.path.endswith("/v1beta") or \
-       parsed_url.path.endswith("/v1") or \
-       (parsed_url.netloc == 'generativelanguage.googleapis.com' and "openai/chat/completions" not in parsed_url.path):
+
+    path = parsed_url.path
+    if isinstance(path, bytes):  # Just in case
+        path = path.decode()
+
+    if path.endswith("/v1beta") or \
+       path.endswith("/v1") or \
+       (parsed_url.netloc == 'generativelanguage.googleapis.com' and "openai/chat/completions" not in path):
         engine = "gemini"
     elif parsed_url.netloc.rstrip('/').endswith('aiplatform.googleapis.com') or \
-         (parsed_url.netloc.rstrip('/').endswith('gateway.ai.cloudflare.com') and "google-vertex-ai" in parsed_url.path) or \
-         "aiplatform.googleapis.com" in parsed_url.path:
+         (parsed_url.netloc.rstrip('/').endswith('gateway.ai.cloudflare.com') and "google-vertex-ai" in path) or \
+         "aiplatform.googleapis.com" in path:
         engine = "vertex"
     elif parsed_url.netloc.rstrip('/').endswith('azure.com'):
         engine = "azure"
@@ -84,7 +83,7 @@ def get_engine(provider, endpoint=None, original_model=""):
         engine = "azure-databricks"
     elif parsed_url.netloc == 'api.cloudflare.com':
         engine = "cloudflare"
-    elif parsed_url.netloc == 'api.anthropic.com' or parsed_url.path.endswith("v1/messages"):
+    elif parsed_url.netloc == 'api.anthropic.com' or path.endswith("v1/messages"):
         engine = "claude"
     elif 'amazonaws.com' in parsed_url.netloc:
         engine = "aws"
@@ -93,6 +92,8 @@ def get_engine(provider, endpoint=None, original_model=""):
         stream = True
     else:
         engine = "gpt"
+
+    return engine, stream
 
     original_model = original_model.lower()
     if original_model \
