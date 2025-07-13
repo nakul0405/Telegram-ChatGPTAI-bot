@@ -178,16 +178,16 @@ class DuckChat:
             raise DuckChatException("No x-vqd-4")
 
     async def process_sse_stream(self, convo_id: str = "default"):
-    """Handles SSE stream from DuckDuckGo Chat API"""
+       """Handles SSE stream from DuckDuckGo Chat API"""
 
-    if not self.vqd or not self.vqd[-1]:
-        raise DuckChatException("Missing x-vqd-4 token.")
+       if not self.vqd or not self.vqd[-1]:
+          raise DuckChatException("Missing x-vqd-4 token.")
 
-    vqd_token = self.vqd[-1]
-    headers = {
+       vqd_token = self.vqd[-1]
+       headers = {
         "Content-Type": "application/json",
         "x-vqd-4": vqd_token,
-    }
+       }
 
     async with self._client.stream(
         "POST",
