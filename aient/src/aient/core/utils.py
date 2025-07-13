@@ -62,12 +62,14 @@ class BaseAPI:
 
 from urllib.parse import urlparse
 
+from urllib.parse import urlparse
+
 def get_engine(provider, endpoint=None, original_model=""):
-    parsed_url = urlparse(provider['base_url'])
-    path = parsed_url.path
-    # ✅ Ensure path is always a string
-    if isinstance(path, bytes):
-        path = path.decode("utf-8")
+    base_url = provider['base_url']
+    if isinstance(base_url, bytes):
+        base_url = base_url.decode("utf-8")  # 🔧 decode bytes to str
+
+    parsed_url = urlparse(base_url)
 
     engine = None
     stream = None
