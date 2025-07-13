@@ -18,37 +18,41 @@ from telegram import InlineKeyboardButton
 
 import os
 
-NICK = os.environ.get('NICK')
+NICK = os.environ.get('NICK', None)
 PORT = int(os.environ.get('PORT', '8080'))
-BOT_TOKEN = os.environ.get('BOT_TOKEN')
-RESET_TIME = max(int(os.environ.get('RESET_TIME', '3600')), 60)
+BOT_TOKEN = os.environ.get('BOT_TOKEN', None)
+RESET_TIME = int(os.environ.get('RESET_TIME', '3600'))
+if RESET_TIME < 60:
+    RESET_TIME = 60
 
 GPT_ENGINE = os.environ.get('GPT_ENGINE', 'gpt-4o')
 API_URL = os.environ.get('API_URL', 'https://api.openai.com/v1/chat/completions')
-GOOGLE_AI_API_KEY = os.environ.get('GOOGLE_AI_API_KEY')
+GOOGLE_AI_API_KEY = os.environ.get('GOOGLE_AI_API_KEY', None)
 
-API = os.environ.get('API')
-WEB_HOOK = os.environ.get('WEB_HOOK')
+API = os.environ.get('API', None)
+WEB_HOOK = os.environ.get('WEB_HOOK', None)
 CHAT_MODE = os.environ.get('CHAT_MODE', "global")
-GET_MODELS = os.environ.get("GET_MODELS", "False").lower() == "true"
+GET_MODELS = (os.environ.get('GET_MODELS', "False") == "False") == False
 
-GROQ_API_KEY = os.environ.get('GROQ_API_KEY')
+GROQ_API_KEY = os.environ.get('GROQ_API_KEY', None)
 
-VERTEX_PRIVATE_KEY = os.environ.get('VERTEX_PRIVATE_KEY')
-VERTEX_CLIENT_EMAIL = os.environ.get('VERTEX_CLIENT_EMAIL')
-VERTEX_PROJECT_ID = os.environ.get('VERTEX_PROJECT_ID')
+VERTEX_PRIVATE_KEY = os.environ.get('VERTEX_PRIVATE_KEY', None)
+VERTEX_CLIENT_EMAIL = os.environ.get('VERTEX_CLIENT_EMAIL', None)
+VERTEX_PROJECT_ID = os.environ.get('VERTEX_PROJECT_ID', None)
 
-# Handle PASS_HISTORY
-_pass = os.environ.get("PASS_HISTORY", "9999").lower()
-if _pass.isdigit():
-    PASS_HISTORY = int(_pass)
-elif _pass == "true":
-    PASS_HISTORY = 9999
-elif _pass == "false":
-    PASS_HISTORY = 0
+PASS_HISTORY = os.environ.get('PASS_HISTORY', 9999)
+if type(PASS_HISTORY) == str:
+    if PASS_HISTORY.isdigit():
+        PASS_HISTORY = int(PASS_HISTORY)
+    elif PASS_HISTORY.lower() == "true":
+        PASS_HISTORY = 9999
+    elif PASS_HISTORY.lower() == "false":
+        PASS_HISTORY = 0
+    else:
+        PASS_HISTORY = 9999
 else:
     PASS_HISTORY = 9999
-
+    
 PREFERENCES = {
     "PASS_HISTORY"      : int(PASS_HISTORY),
     "IMAGEQA"           : (os.environ.get('IMAGEQA', "False") == "True") == False,
