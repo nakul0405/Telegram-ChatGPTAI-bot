@@ -152,7 +152,7 @@ async def command_bot(update, context, language=None, prompt=translator_prompt, 
                 return
 
             robot, role, api_key, api_url = get_robot(convo_id)
-            engine = "llama3-70b-8192"
+            engine = Users.get_config(convo_id, "engine")
 
             if Users.get_config(convo_id, "LONG_TEXT"):
                 async with lock:
