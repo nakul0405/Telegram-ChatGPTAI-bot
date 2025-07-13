@@ -197,7 +197,7 @@ class DuckChat:
             raise RatelimitException("Rate limit exceeded")
 
         async for line in response.aiter_lines():
-            if line.startswith("data: "):
+            if line.startswith('data: '):
                 yield line
 
     async def ask_stream_async(self, query, convo_id, model, **kwargs):
