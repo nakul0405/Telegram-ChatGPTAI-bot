@@ -178,34 +178,36 @@ class DuckChat:
             raise DuckChatException("No x-vqd-4")
 
     async def process_sse_stream(self, convo_id: str = "default"):
-       """Handles SSE stream from DuckDuckGo Chat API"""
+        """Handles SSE stream from DuckDuckGo Chat API"""
 
-       if not self.vqd or not self.vqd[-1]:
-          raise DuckChatException("Missing x-vqd-4 token.")
+        # Check for valid token
+        if not self.vqd or not self.vqd[-1]:
+            raise DuckChatException("Missing x-vqd-4 token.")
 
-       vqd_token = self.vqd[-1]
-       headers = {
-        "Content-Type": "application/json",
-        "x-vqd-4": vqd_token,
-       }
+        vqd_token = self.vqd[-1]
+        headers = {
+            "Content-Type": "application/json",
+            "x-vqd-4": vqd_token,
+        }
 
-    async with self._client.stream(
-        "POST",
-        "https://duckduckgo.com/duckchat/v1/chat",
-        headers=headers,
-        content=self.__encoder.encode(self.conversation[convo_id]),
-    ) as response:
+        # Stream response from DuckDuckGo
+        async with self._client.stream(
+            "POST",
+            "https://duckduckgo.com/duckchat/v1/chat",
+            headers=headers,
+            content=self.__encoder.encode(self.conversation[convo_id]),
+        ) as response:
 
-        if response.status_code == 400:
-            content = await response.aread()
-            print("response.status_code", response.status_code, content)
+            if response.status_code == 400:
+                content = await response.aread()
+                print("response.status_code", response.status_code, content)
 
-        if response.status_code == 429:
-            raise RatelimitException("Rate limit exceeded")
+            if response.status_code == 429:
+                raise RatelimitException("Rate limit exceeded")
 
-        async for line in response.aiter_lines():
-            if line.startswith("data: "):
-                yield line
+            async for line in response.aiter_lines():
+                if line.startswith("data: "):
+                    yield line
 
     async def ask_stream_async(self, query, convo_id, model, **kwargs):
         """Get answer from chat AI"""
