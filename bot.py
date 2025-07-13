@@ -152,7 +152,7 @@ async def command_bot(update, context, language=None, prompt=translator_prompt, 
                 return
 
             robot, role, api_key, api_url = get_robot(convo_id)
-            engine = "mixtral"
+            engine = "mixtral-8x7b-32768"
 
             if Users.get_config(convo_id, "LONG_TEXT"):
                 async with lock:
