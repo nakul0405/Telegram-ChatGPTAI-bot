@@ -426,12 +426,37 @@ def reset_ENGINE(chat_id, message=None):
     if VERTEX_PRIVATE_KEY and VERTEX_CLIENT_EMAIL and VERTEX_PROJECT_ID and vertexBot:
         vertexBot.reset(convo_id=str(chat_id), system_prompt=systemprompt)
 
-def get_robot(chat_id=None):
-    from config import GROQ_API_KEY
-    robot = groqBot
+def get_robot(chat_id = None):
+    global ChatGPTbot, groqBot, duckBot
+    engine = Users.get_config(chat_id, "engine")
     role = "user"
-    api_key = GROQ_API_KEY
-    api_url = "https://api.groq.com/openai/v1/chat/completions"
+    if CLAUDE_API and "claude-3" in engine:
+        robot = ChatGPTbot
+        api_key = CLAUDE_API
+        api_url = "https://api.anthropic.com/v1/messages"
+    elif ("mixtral" in engine or "llama" in engine) and GROQ_API_KEY:
+        robot = groqBot
+        api_key = GROQ_API_KEY
+        api_url = "https://api.groq.com/openai/v1/chat/completions"
+    elif GOOGLE_AI_API_KEY and ("gemini" in engine or os.environ.get('API_URL') == None):
+        robot = ChatGPTbot
+        api_key = GOOGLE_AI_API_KEY
+        api_url = "https://generativelanguage.googleapis.com/v1beta/models/{model}:{stream}?key={api_key}"
+        api_url = api_url.format(model=engine, stream="streamGenerateContent", api_key=api_key)
+    elif VERTEX_PRIVATE_KEY and VERTEX_CLIENT_EMAIL and VERTEX_PROJECT_ID and "gemini" in engine:
+        robot = vertexBot
+        api_key = VERTEX_PRIVATE_KEY
+        api_url = "https://us-central1-aiplatform.googleapis.com/v1/projects/{PROJECT_ID}/locations/us-central1/publishers/google/models/{MODEL_ID}:{stream}"
+    elif ChatGPTbot:
+        robot = ChatGPTbot
+        api_key = Users.get_config(chat_id, "api_key")
+        api_url = Users.get_config(chat_id, "api_url")
+        api_url = BaseAPI(api_url=api_url).chat_url
+    else:
+        robot = duckBot
+        api_key = "duckduckgo"
+        api_url = None
+
     return robot, role, api_key, api_url
 
 whitelist = os.environ.get('whitelist', None)
