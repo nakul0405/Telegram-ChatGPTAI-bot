@@ -12,7 +12,7 @@ from datetime import datetime
 from aient.src.aient.utils import prompt
 from aient.src.aient.core.utils import update_initial_model, BaseAPI
 from aient.src.aient.models import chatgpt, groq, claude3, gemini, vertex, PLUGINS, whisper, DuckChat
-from aient.src.aient.models.duckduckgo import DuckChat
+from aient.src.aient.models import groq
 
 from telegram import InlineKeyboardButton
 
