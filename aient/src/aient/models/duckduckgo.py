@@ -178,10 +178,10 @@ class DuckChat:
             raise DuckChatException("No x-vqd-4")
 
     async def process_sse_stream(self, convo_id: str = "default"):
-    headers = {
+       headers = {
         "Content-Type": "application/json",
         "x-vqd-4": self.vqd[-1],
-    }
+       }
 
     async with self._client.stream(
         "POST",
