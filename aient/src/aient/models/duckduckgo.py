@@ -178,25 +178,32 @@ class DuckChat:
             raise DuckChatException("No x-vqd-4")
 
     async def process_sse_stream(self, convo_id: str = "default"):
-        # print("self.conversation[convo_id]", self.conversation[convo_id])
-        async with self._client.stream(
-            "POST",
-            "https://duckduckgo.com/duckchat/v1/chat",
-            headers={
-                "Content-Type": "application/json",
-                "x-vqd-4": self.vqd[-1],
-            },
-            content=self.__encoder.encode(self.conversation[convo_id]),
-        ) as response:
-            if response.status_code == 400:
-                content = await response.aread()
-                print("response.status_code", response.status_code, content)
-            if response.status_code == 429:
-                raise RatelimitException("Rate limit exceeded")
+    headers = {
+        "Content-Type": "application/json"
+    }
 
-            async for line in response.aiter_lines():
-                if line.startswith('data: '):
-                    yield line
+    # ✅ Safely add "x-vqd-4" only if self.vqd exists and is not empty
+    if self.vqd and isinstance(self.vqd, list) and self.vqd[-1]:
+        headers["x-vqd-4"] = str(self.vqd[-1])
+    else:
+        raise ValueError("❌ self.vqd is missing or invalid.")
+
+    # ✅ Make the request with safe headers
+    async with self._client.stream(
+        "POST",
+        "https://duckduckgo.com/duckchat/v1/chat",
+        headers=headers,
+        content=self.__encoder.encode(self.conversation[convo_id]),
+    ) as response:
+        if response.status_code == 400:
+            content = await response.aread()
+            print("response.status_code", response.status_code, content)
+        if response.status_code == 429:
+            raise RatelimitException("Rate limit exceeded")
+
+        async for line in response.aiter_lines():
+            if line.startswith('data: '):
+                yield line
 
     async def ask_stream_async(self, query, convo_id, model, **kwargs):
         """Get answer from chat AI"""
