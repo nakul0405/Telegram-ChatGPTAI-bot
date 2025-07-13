@@ -62,37 +62,39 @@ class BaseAPI:
 
 from urllib.parse import urlparse
 
-from urllib.parse import urlparse
-
 def get_engine(provider, endpoint=None, original_model=""):
     base_url = provider['base_url']
+    
+    # Ensure base_url is string (not bytes)
     if isinstance(base_url, bytes):
-        base_url = base_url.decode("utf-8")  # 🔧 decode bytes to str
+        base_url = base_url.decode("utf-8")
+    base_url = str(base_url)
 
     parsed_url = urlparse(base_url)
+    path = parsed_url.path
+    netloc = parsed_url.netloc.rstrip('/')
 
     engine = None
     stream = None
 
-    if path.endswith("/v1beta") or \
-       path.endswith("/v1") or \
-       (parsed_url.netloc == 'generativelanguage.googleapis.com' and "openai/chat/completions" not in path):
+    if path.endswith("/v1beta") or path.endswith("/v1") or \
+       (netloc == 'generativelanguage.googleapis.com' and "openai/chat/completions" not in path):
         engine = "gemini"
-    elif parsed_url.netloc.rstrip('/').endswith('aiplatform.googleapis.com') or \
-         (parsed_url.netloc.rstrip('/').endswith('gateway.ai.cloudflare.com') and "google-vertex-ai" in path) or \
+    elif netloc.endswith('aiplatform.googleapis.com') or \
+         (netloc.endswith('gateway.ai.cloudflare.com') and "google-vertex-ai" in path) or \
          "aiplatform.googleapis.com" in path:
         engine = "vertex"
-    elif parsed_url.netloc.rstrip('/').endswith('azure.com'):
+    elif netloc.endswith('azure.com'):
         engine = "azure"
-    elif parsed_url.netloc.rstrip('/').endswith('azuredatabricks.net'):
+    elif netloc.endswith('azuredatabricks.net'):
         engine = "azure-databricks"
-    elif parsed_url.netloc == 'api.cloudflare.com':
+    elif netloc == 'api.cloudflare.com':
         engine = "cloudflare"
-    elif parsed_url.netloc == 'api.anthropic.com' or path.endswith("v1/messages"):
+    elif netloc == 'api.anthropic.com' or path.endswith("v1/messages"):
         engine = "claude"
-    elif 'amazonaws.com' in parsed_url.netloc:
+    elif 'amazonaws.com' in netloc:
         engine = "aws"
-    elif parsed_url.netloc == 'api.cohere.com':
+    elif netloc == 'api.cohere.com':
         engine = "cohere"
         stream = True
     else:
