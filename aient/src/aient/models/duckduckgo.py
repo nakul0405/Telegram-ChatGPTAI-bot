@@ -180,18 +180,15 @@ class DuckChat:
     async def process_sse_stream(self, convo_id: str = "default"):
     """Handles SSE stream from DuckDuckGo Chat API"""
 
-    # ✅ Token check
     if not self.vqd or not self.vqd[-1]:
         raise DuckChatException("Missing x-vqd-4 token.")
 
-    # ✅ Prepare headers
     vqd_token = self.vqd[-1]
     headers = {
         "Content-Type": "application/json",
         "x-vqd-4": vqd_token,
     }
 
-    # ✅ Make request
     async with self._client.stream(
         "POST",
         "https://duckduckgo.com/duckchat/v1/chat",
@@ -199,7 +196,6 @@ class DuckChat:
         content=self.__encoder.encode(self.conversation[convo_id]),
     ) as response:
 
-        # 🔁 Handle status codes
         if response.status_code == 400:
             content = await response.aread()
             print("response.status_code", response.status_code, content)
@@ -207,7 +203,6 @@ class DuckChat:
         if response.status_code == 429:
             raise RatelimitException("Rate limit exceeded")
 
-        # ✅ Stream and yield messages
         async for line in response.aiter_lines():
             if line.startswith("data: "):
                 yield line
