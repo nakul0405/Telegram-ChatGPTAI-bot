@@ -60,14 +60,17 @@ class BaseAPI:
             self.chat_url = api_url
             self.embeddings = api_url
 
+from urllib.parse import urlparse
+
 def get_engine(provider, endpoint=None, original_model=""):
     parsed_url = urlparse(provider['base_url'])
+    path = parsed_url.path
+    # ✅ Ensure path is always a string
+    if isinstance(path, bytes):
+        path = path.decode("utf-8")
+
     engine = None
     stream = None
-
-    path = parsed_url.path
-    if isinstance(path, bytes):  # Just in case
-        path = path.decode()
 
     if path.endswith("/v1beta") or \
        path.endswith("/v1") or \
