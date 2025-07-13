@@ -182,13 +182,11 @@ class DuckChat:
         "Content-Type": "application/json"
     }
 
-    # ✅ Safely add "x-vqd-4" only if self.vqd exists and is not empty
     if self.vqd and isinstance(self.vqd, list) and self.vqd[-1]:
         headers["x-vqd-4"] = str(self.vqd[-1])
     else:
         raise ValueError("❌ self.vqd is missing or invalid.")
 
-    # ✅ Make the request with safe headers
     async with self._client.stream(
         "POST",
         "https://duckduckgo.com/duckchat/v1/chat",
