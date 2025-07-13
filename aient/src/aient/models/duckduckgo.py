@@ -179,13 +179,9 @@ class DuckChat:
 
     async def process_sse_stream(self, convo_id: str = "default"):
     headers = {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "x-vqd-4": self.vqd[-1],
     }
-
-    if self.vqd and isinstance(self.vqd, list) and self.vqd[-1]:
-        headers["x-vqd-4"] = str(self.vqd[-1])
-    else:
-        raise ValueError("❌ self.vqd is missing or invalid.")
 
     async with self._client.stream(
         "POST",
@@ -196,11 +192,12 @@ class DuckChat:
         if response.status_code == 400:
             content = await response.aread()
             print("response.status_code", response.status_code, content)
+
         if response.status_code == 429:
             raise RatelimitException("Rate limit exceeded")
 
         async for line in response.aiter_lines():
-            if line.startswith('data: '):
+            if line.startswith("data: "):
                 yield line
 
     async def ask_stream_async(self, query, convo_id, model, **kwargs):
